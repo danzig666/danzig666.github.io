@@ -14,6 +14,13 @@
     var path = location.pathname;
     if (old.test(path)) {
       location.replace(path.replace(old, "/QWebMap$1") + location.search + location.hash);
+      return;
+    }
+    // The QGIS plugin catalogue lives at /QGIS/ (paths are case-sensitive);
+    // send /qgis, /Qgis/ etc. there.
+    var plugins = /^\/qgis(\/|$)/i;
+    if (plugins.test(path) && !/^\/QGIS(\/|$)/.test(path)) {
+      location.replace(path.replace(plugins, "/QGIS$1") + location.search + location.hash);
     }
   })();
 </script>
