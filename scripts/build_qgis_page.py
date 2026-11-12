@@ -170,12 +170,12 @@ def collect():
             "icon": icon_url,
             "stars": repo["stargazers_count"],
             "pushed": repo["pushed_at"][:10],
+            "pushed_at": repo["pushed_at"],
             "fork": fork,
             "release": download,
         })
-    # Own plugins first, then forks; most recently updated first within each.
-    plugins.sort(key=lambda p: p["pushed"], reverse=True)
-    plugins.sort(key=lambda p: p["fork"] is not None)
+    # Most recently updated first, own plugins and forks mixed.
+    plugins.sort(key=lambda p: p["pushed_at"], reverse=True)
     return plugins
 
 
