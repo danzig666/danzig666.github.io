@@ -340,7 +340,7 @@ def main():
     print(f"Scanning public repositories of {OWNER}…", file=sys.stderr)
     plugins = collect()
     OUT_DIR.mkdir(exist_ok=True)
-    (OUT_DIR / "plugins.json").write_text(json.dumps(plugins, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (OUT_DIR / "plugins.json").write_text(json.dumps(plugins, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     (OUT_DIR / "index.html").write_text(render(plugins), encoding="utf-8", newline="\n")
     print(f"Wrote {len(plugins)} plugins to {OUT_DIR}", file=sys.stderr)
 
