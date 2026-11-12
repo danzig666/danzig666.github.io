@@ -1,0 +1,42 @@
+name: Rebuild QGIS plugin page
+
+on:
+  schedule:
+    - cron: "17 4 * * *"   # daily
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/build_qgis_page.py
+      - .github/workflows/qgis-plugins.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qgis-plugins
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build QGIS/index.html
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/build_qgis_page.py
+      - name: Commit if changed
+        run: |
+          git add QGIS
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update QGIS plugin list"
+            git push
+          fi
